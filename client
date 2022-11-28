@@ -1,0 +1,20 @@
+import socket
+host="localhost"
+port = 10000
+
+print(f"ouverture de la socket sur le serveur {host} port {port}")
+client_socket = socket.socket()
+client_socket.connect((host, port))
+print("serveur connecté")
+message = ""
+while message != 'bye':
+    message = input(" message a envoyé :")
+    client_socket.send(message.encode())
+    print("message envoyé")
+
+data = client_socket.recv(1024).decode()
+print(f"message du serveur : {data}")
+
+# fermeture de la socket du client
+client_socket.close()
+print("socket fermée")
