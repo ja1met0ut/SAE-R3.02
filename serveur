@@ -1,21 +1,76 @@
-import socket
-
+import platform,psutil,os,socket
 host = "localhost"
 port = 10000
 
+# Ouverture de la socket
 server_socket = socket.socket()
 server_socket.bind((host, port))
 server_socket.listen(1)
 print('En attente du client')
 
+# Connexion au client
 conn, address = server_socket.accept()
 print(f'client connecté {address}')
 
 # reception du message du client
-msgb = conn.recv(1024) #message en bytes
-message = msgb.decode()
+message = ''
+while message != 'disconnect'and 'reset':
+    # message en bytes
+    msgb = conn.recv(1024)
+    # message décodé
+    message = msgb.decode()
+    print(f"Message {message} recu")
+
+
+    # réception du message CPU
+    if message == 'CPU':
+        print('The CPU usage is: ', psutil.cpu_percent(4))
+        percentCPU = str(psutil.cpu_percent(4))
+        conn.send(percentCPU.encode())
+
+
+    # réception du message OS
+    elif message == 'OS':
+        print('OS information:', platform.platform())
+        platform.platform()
+        conn.send(platform.platform().encode())
+
+
+    # réception du message python --version
+    elif message == 'python --version':
+        print('python version:', platform.python_version())
+        platform.python_version()
+        conn.send(platform.python_version().encode())
+
+
+    # réception du message KILL
+    elif message == 'KILL':
+        server_socket.close()
+        print("fermeture de la socket serveur")
+
+
+    # réception du message RAM
+    elif message == 'RAM':
+        print('RAM memory % used:', psutil.virtual_memory())
+        percentRAM = str(psutil.virtual_memory())
+        conn.send(percentRAM.encode())
+
+
+    # réception du message HOSTNAME
+    elif message == 'HOSTNAME':
+        print('HOSTNAME :', platform.node())
+        platform.node()
+        conn.send(platform.node().encode())
+
+
+    # réception du message IP
+    elif message == 'IP':
+        print(server_socket.getsockname()[0])
+        IPADDR = str(server_socket.getsockname()[0])
+        conn.send(IPADDR.encode())
 
 #j'envoie un message
+
 reply = input("Saisir un message : ")
 conn.send(reply.encode())
 print(f"Message {reply} envoyé")
