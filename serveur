@@ -1,9 +1,13 @@
-import platform,psutil,socket
+import platform, psutil, socket, sys, os
+
 host = "localhost"
 port = 10000
 message = ''
+path = "C:/Users/e2102941/PycharmProjects/sae client-serveur/"
+patht = "C:/Users/e2102941/PycharmProjects/sae client-serveur/toto/"
 
 # Ouverture de la socket
+
 while message != 'kill':
     server_socket = socket.socket()
     server_socket.bind((host, port))
@@ -11,22 +15,26 @@ while message != 'kill':
     print('En attente du client')
 
     # Connexion au client
+
     while message != 'reset' and 'kill':
         conn, address = server_socket.accept()
         print(f'client connecté {address}')
 
         # reception du message du client
-        while message != 'disconnect'and 'reset' and 'kill':
+
+        while message != 'disconnect' and 'reset' and 'kill':
 
             # Message en bytes
+
             msgb = conn.recv(1024)
 
             # Message décodé
+
             message = msgb.decode()
             print(f"Message {message} recu")
 
-
             # Réception du message CPU
+
             if message == 'CPU':
                 print('The CPU usage is: ', psutil.cpu_percent(4))
                 percentCPU = str(psutil.cpu_percent(4))
@@ -34,6 +42,7 @@ while message != 'kill':
 
 
             # Réception du message OS
+
             elif message == 'OS':
                 print('OS information:', platform.platform())
                 platform.platform()
@@ -41,6 +50,7 @@ while message != 'kill':
 
 
             # Réception du message python --version
+
             elif message == 'python --version':
                 print('python version:', platform.python_version())
                 platform.python_version()
@@ -48,6 +58,7 @@ while message != 'kill':
 
 
             # Réception du message RAM
+
             elif message == 'RAM':
                 print('RAM memory % used:', psutil.virtual_memory())
                 percentRAM = str(psutil.virtual_memory())
@@ -55,6 +66,7 @@ while message != 'kill':
 
 
             # Réception du message HOSTNAME
+
             elif message == 'HOSTNAME':
                 print('HOSTNAME :', platform.node())
                 platform.node()
@@ -62,10 +74,32 @@ while message != 'kill':
 
 
             # Réception du message IP
+
             elif message == 'IP':
                 print(server_socket.getsockname()[0])
                 IPADDR = str(server_socket.getsockname()[0])
                 conn.send(IPADDR.encode())
+
+
+            # Réception du message DOS:dir
+
+            elif message == 'DOS:dir':
+                dirs = os.listdir(path)
+                for file in dirs:
+                    conn.send(file.encode())
+                    print(file)
+
+
+            # Réception du message DOS:mkdir
+
+
+
+            elif message == 'DOS:mkdir toto':
+                os.mkdir(patht, 0o755)
+                FC ="Le fichier toto a été crée"
+                conn.send(FC.encode())
+
+
 
                 # J'envoie un message
 
@@ -74,9 +108,12 @@ while message != 'kill':
                 print(f"Message {reply} envoyé")
 
         # Fermeture socket client
+
         conn.close()
         print("fermeture de la socket client")
 
         # Fermeture socket serveur
+
     server_socket.close()
     print("fermeture de la socket serveur")
+
