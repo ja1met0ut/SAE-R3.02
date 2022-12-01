@@ -1,15 +1,22 @@
 import socket,csv
 
-
 # ouverture en lecture du fichier csv
-with open('Classeur1.csv', newline='') as fichier:
+with open('DonnéesClient2.csv', newline='') as fichier:
     # on crée un objet reader
     lecture = csv.reader(fichier, delimiter=';')
 
     # lecture et affichage des lignes:
     lignes = list(lecture)
+
 host = lignes[0]
-port = lignes[1]
+hosts = lignes[1]
+port = lignes[2]
+ports = lignes[3]
+
+print(f"Le{host}")
+print(f"est{hosts}")
+print(f"Le{port}")
+print(f"utilisé est{ports}")
 
 print(f"ouverture de la socket sur le serveur {host} port {port}")
 client_socket = socket.socket()
