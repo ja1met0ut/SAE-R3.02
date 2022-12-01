@@ -1,6 +1,6 @@
 import platform, psutil, socket, sys, os
 
-host = "localhost"
+host = "0.0.0.0"
 port = 10000
 message = ''
 path = "C:/Users/e2102941/PycharmProjects/sae client-serveur/"
