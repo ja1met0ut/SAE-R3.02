@@ -1,0 +1,6 @@
+Le code est sur une base de boucle while.
+
+Donc le code du serveur va comparer toutes les boucles while au message qui a été reçu de la part du client et en fonction du message envoyé le serveur va donnée les informations lié à la commande reçu.
+
+Il y a certaine commandes qui ne sont pas fonctionnel car je n’ai pas réussi à les faire fonctionner
+
